@@ -8,35 +8,35 @@ import java.util.Optional;
 @Service
 public class WorkerService {
 
-  private final WorkerRepository workerRepository;
+    private final WorkerRepository workerRepository;
 
     public WorkerService(WorkerRepository workerRepository) {
         this.workerRepository = workerRepository;
     }
 
     public int getSumOfSalariesOfAllWorkers() {
-    List<Worker> workers = workerRepository.findAll();
-    return workers.stream()
-      .mapToInt(Worker::getSalary)
-      .sum();
-  }
-
-  public void hireWorker(Worker worker) {
-    if (worker.getSalary() < 16_242){
-      throw new TooLowSalaryException();
+        List<Worker> workers = workerRepository.findAll();
+        return workers.stream()
+                .mapToInt(Worker::getSalary)
+                .sum();
     }
-    workerRepository.save(worker);
-  }
 
-  public Worker findWorkerById(long id) {
-    Optional<Worker> worker = workerRepository.findById(id);
-    return worker.orElseThrow(() -> new WorkerNotFoundException("Worker not found"));
-  }
+    public void hireWorker(Worker worker) {
+        if (worker.getSalary() < 16_242) {
+            throw new TooLowSalaryException();
+        }
+        workerRepository.save(worker);
+    }
 
-  public void updateWorker(Worker updatedWorker) {
-    Worker existingWorker = findWorkerById(updatedWorker.getId());
-    existingWorker.setName(updatedWorker.getName());
-    existingWorker.setSalary(updatedWorker.getSalary());
-    workerRepository.update(existingWorker);
-  }
+    public Worker findWorkerById(long id) {
+        Optional<Worker> worker = workerRepository.findById(id);
+        return worker.orElseThrow(() -> new WorkerNotFoundException("Worker not found"));
+    }
+
+    public void updateWorker(Worker updatedWorker) {
+        Worker existingWorker = findWorkerById(updatedWorker.getId());
+        existingWorker.setName(updatedWorker.getName());
+        existingWorker.setSalary(updatedWorker.getSalary());
+        workerRepository.update(existingWorker);
+    }
 }
